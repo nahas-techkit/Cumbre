@@ -3,7 +3,8 @@ var router = express.Router();
 const Event = require('../controllers/user/event')
 
 /* GET users listing. */
-router.get('/event',Event.createEvent)
+router.get('/event',Event.getAllEvent)
+router.get('/event/:id', Event.getEventById)
 
 
 
