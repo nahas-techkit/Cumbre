@@ -3,27 +3,52 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = mongoose.Schema(
   {
-   
-    name: {
+    professional: {
       type: String,
-      required: [true, "name is required"],
+      required: [true, "professional Detials is required"],
     },
-    email: {
+    middle_name: {
       type: String,
-      required: [true, "email is required"],
+      required: [true, "Middle Name is Required"],
     },
-    phone_no: {
+    last_name: {
       type: String,
-      required: [true, "Phone Number is Required"],
+      required: [true, "Last Name is Required"],
     },
 
-    panCardNo:String,
-    aadharNo:String,
-    profilePicture:String,
+    membership_no: {
+      type: String,
+    },
+
+    phone_no: {
+      type: String,
+      required: [true, "Last Name is Required"],
+    },
+
+    email: {
+      type: String,
+      required: [true, "email is Required"],
+    },
+
+    personal_bio: {
+      type: String,
+    },
+
+    company: String,
+    company_bio: String,
+    education: String,
+    permenent_address: String,
+    city: String,
+    state: String,
+    country: String,
+    postal_code: String,
+
     password: {
       type: String,
       required: [true, "Password is Required"],
     },
+
+    photo:String
   },
   {
     timestamps: true,
