@@ -15,8 +15,8 @@ const eventSchema = mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Completed", "Pending", "Started"],
-      default: "Pending",
+      enum: ["Completed", "Active", "Inactive", "Started", "Deleted", "Cancelled"],
+      default: "Active",
     },
     title: { type: String, required: [true, "date is required"] },
     duration: { type: String, required: [true, "date is required"] },

@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
 
 /* GET users listing. */
 router.post('/register',upload.single('photo'),Register.register)
+router.post('/login',Register.login)
 router.post('/send-otp',Auth.sendOTP)
 router.post('/verify-otp',Auth.verifyOtp)
 

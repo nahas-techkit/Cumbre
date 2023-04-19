@@ -62,27 +62,21 @@ module.exports = {
 
   login: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      const { phone_no} = req.body;
+      const user = await User.findOne({ phone_no });
 
       if (!user) {
-        return res.status(401).json({ message: "Email does not exist" });
-      }
-
-      const check = await bcrypt.compare(password, user.password);
-
-      if (!check) {
-        return res.status(401).json({ message: "Incorrect Password" });
+        return res.status(401).json({ message: "Phone No does not exist", userExist:false });
       }
 
       const accessToken = generateAccessToken({ id: user._id });
       const refreshToken = generateRefreshToken({ id: user._id });
 
       res.status(200).json({
+        userExist:true,
         user,
         accessToken,
-        refreshToken,
-        message: "Login successfully",
+        refreshToken
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
