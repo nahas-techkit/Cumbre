@@ -27,7 +27,6 @@ module.exports = {
 
   getAllSpeker : async (req,res)=>{
     try {
-      console.log('1111111111');
         const spekers = await Speker.find().sort({createdAt:-1})
         res.status(200).json(spekers)
     } catch (error) {

@@ -1,4 +1,5 @@
 const EventScheam = require("../../models/Event");
+const SpekerScheam = require("../../models/Spekers");
 
 module.exports = {
   
@@ -20,5 +21,7 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
+
+  
 };

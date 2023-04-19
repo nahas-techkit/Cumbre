@@ -60,6 +60,7 @@ module.exports = {
 
   editEvent: async (req, res) => {
     try {
+      
       const { id } = req.params;
       const { body } = req;
       console.log(body, "body");
