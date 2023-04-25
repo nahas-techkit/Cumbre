@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -11,7 +11,7 @@ module.exports = {
     try {
       const {body} = req;
       const {file} = req;
-      const existingUser = await User.findOne({ email: body.email });
+      const existingUser = await User.findOne({ phone_no: body.phone_no });
 
       if (existingUser) {
         return res
@@ -19,10 +19,10 @@ module.exports = {
           .json({ message: "This email address already exists" });
       }
 
-      const cryptedPassword = await bcrypt.hash(body.password, 12);
+      
       
 
-      console.log(file);
+
 
       const newUser = await new User({
         professional:body.professional,
