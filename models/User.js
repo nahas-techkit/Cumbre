@@ -7,6 +7,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "professional Detials is required"],
     },
+    first_name: {
+      type: String,
+      required: [true, "First Name is Required"],
+    },
     middle_name: {
       type: String,
       required: [true, "Middle Name is Required"],
@@ -29,12 +33,11 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "email is Required"],
     },
-
     personal_bio: {
       type: String,
     },
-
     company: String,
+    position: String,
     company_bio: String,
     education: String,
     permenent_address: String,
@@ -42,13 +45,7 @@ const userSchema = mongoose.Schema(
     state: String,
     country: String,
     postal_code: String,
-
-    password: {
-      type: String,
-      required: [true, "Password is Required"],
-    },
-
-    photo:String
+    photo: String,
   },
   {
     timestamps: true,

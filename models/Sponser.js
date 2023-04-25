@@ -14,7 +14,14 @@ const sponserSchema = mongoose.Schema(
       required: [true, "email is Required"],
     },
     photo: String,
+    status: {
+      type: String,
+      required: true,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
   },
+
 
   {
     timestamps: true,

@@ -26,6 +26,7 @@ module.exports = {
 
       const newUser = await new User({
         professional:body.professional,
+        first_name:body.first_name,
         middle_name:body.middle_name,
         last_name:body.last_name,
         membership_no:body.membership_no,
@@ -33,6 +34,7 @@ module.exports = {
         email:body.email,
         personal_bio:body.personal_bio,
         company:body.company,
+        position:body.company,
         company_bio:body.company_bio,
         education:body.education,
         permenent_address:body.permenent_address,
@@ -40,7 +42,6 @@ module.exports = {
         state:body.state,
         country:body.country,
         postal_code:body.postal_code,
-        password:cryptedPassword,
         photo:"/uploads/profile/" + file?.filename,
       })
 

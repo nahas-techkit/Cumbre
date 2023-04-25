@@ -20,4 +20,14 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
+  
+  getAllSponsers : async (req, res) => {
+    try {
+      const sponser = await Sponser.find({status:{$ne:'Inactive'}}).sort({createdAt:-1})
+      res.status(200).json(sponser)
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  
 };

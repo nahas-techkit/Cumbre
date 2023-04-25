@@ -41,6 +41,7 @@ router.get("/speker/:id", Speker.getSpekersById);
 
 /* Sponser listing. */
 router.post('/sponser', upload.single('sponserImg'), Sponser.createSponser )
+router.get('/sponser', Sponser.getAllSponsers )
 
 /* Gallery listing. */
 router.post('/gallery', upload.single('gallery'), Gallery.uploadFile )

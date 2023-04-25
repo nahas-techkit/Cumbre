@@ -25,11 +25,16 @@ const spekersSchema = mongoose.Schema(
     state: String,
     country: String,
     postal_code: String,
-    photo:String,
-    evnts:[{type:ObjectId, ref:'Event'}]
+    photo: String,
+    evnts: [{ type: ObjectId, ref: "Event" }],
+    status: {
+      type: String,
+      required: true,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
   },
 
-  
   {
     timestamps: true,
   }
