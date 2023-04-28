@@ -5,7 +5,7 @@ module.exports = {
   
   getAllEvent :async (req,res)=>{
     try {
-      const events = await EventScheam.find().sort({createdAt:-1})
+      const events = await EventScheam.find().sort({createdAt:1})
       res.status(200).json(events)
     } catch (error) {
       res.status(500).json({ message: error.message });

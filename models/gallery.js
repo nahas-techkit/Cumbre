@@ -1,15 +1,9 @@
 const mongoose = require("mongoose");
 const gallerySchema = mongoose.Schema(
   {
-    file: {
-      type: String,
-      required: [true, "Name is Required"],
-    },
-    discription: {
-      type: String,
-      required: [true, "Phone No  is Required"],
-    },
-    type:String
+    file: { type: String, required: true },
+    type: { type: String, required: true },
+    discription: { type: String },
   },
 
   {

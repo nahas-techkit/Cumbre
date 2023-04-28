@@ -22,4 +22,6 @@ router.get('/sponser/:id',Sponser.getSponserById)
 router.get('/images',Gallery.getImages)
 router.get('/videos',Gallery.getVideos)
 
+/* GET User listing. */
+
 module.exports = router;

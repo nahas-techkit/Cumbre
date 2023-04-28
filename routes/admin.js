@@ -13,7 +13,9 @@ const storage = multer.diskStorage({
         return cb(null, "public/uploads/spekers");
       }else if(file.fieldname === 'sponserImg'){
         return cb(null, "public/uploads/sponsers");
-      } else if(file.fieldname === 'gallery'){
+      } else if(file.fieldname === 'images'){
+        return cb(null, "public/uploads/gallery");
+      } else {
         return cb(null, "public/uploads/gallery");
       }
     
@@ -40,11 +42,17 @@ router.get("/speker/:id", Speker.getSpekersById);
 
 
 /* Sponser listing. */
-router.post('/sponser', upload.single('sponserImg'), Sponser.createSponser )
+router.post('/sponsor', upload.single('sponserImg'), Sponser.createSponser )
 router.get('/sponser', Sponser.getAllSponsers )
+router.get('/sponsor/:id', Sponser.getSponserById )
+router.delete('/sponser/:id', Sponser.deleteSponser )
+router.put('/sponsor/:id',upload.single('sponserImg'), Sponser.updateSponsor )
 
 /* Gallery listing. */
-router.post('/gallery', upload.single('gallery'), Gallery.uploadFile )
+router.post('/gallery', upload.array('images'), Gallery.uploadFile )
+router.get('/image', Gallery.getAllImage )
+router.get('/video', Gallery.getVideos )
+router.delete('/gallery/:id', Gallery.deleteFile )
 
 
 
