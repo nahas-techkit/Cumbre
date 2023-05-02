@@ -47,6 +47,8 @@ router.delete("/schedule/:id", Schedule.deleteSchedule);
 router.post("/speker",upload.single('photo'), Speker.createSpeker);
 router.get("/speker", Speker.getAllSpeker);
 router.get("/speker/:id", Speker.getSpekersById);
+router.delete("/speker/:id", Speker.deleteSpeker);
+router.put("/speker/:id",upload.single('photo'), Speker.updateSpeker);
 
 
 /* Sponser listing. */

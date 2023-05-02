@@ -1,5 +1,5 @@
 const Sponser = require("../../models/Sponser");
-const {deleteFile} = require("../../utils/deleteFile")
+const { deleteFile } = require("../../utils/deleteFile");
 
 module.exports = {
   createSponser: async (req, res) => {
@@ -9,7 +9,7 @@ module.exports = {
 
       const newSponser = await new Sponser({
         name: body.name,
-        bio: body.bio,
+        bio: body.company_bio,
         email: body.email,
         photo: "/uploads/sponsers/" + file?.filename,
       }).save();
@@ -49,21 +49,27 @@ module.exports = {
       const { body } = req;
       const { file } = req;
 
-      const sponser = await Sponser.findById(id)
-      console.log(sponser);
-      
+      if (file) {
+
+        console.log("file=>",file, );
+        const sponser = await Sponser.findById(id);
+        console.log('sponser=>', sponser);
+        const updateImage = await Sponser.findByIdAndUpdate(id, {
+          photo: "/uploads/sponsers/" + file?.filename,
+        },{new:true});
+        console.log("img=>",updateImage);
+        await deleteFile("public/" + sponser.photo);
+      }
+
       await Sponser.findByIdAndUpdate(
         id,
         {
           name: body.name,
           bio: body.company_bio,
           email: body.email,
-          photo: "/uploads/sponsers/" + file?.filename,
         },
         { new: true }
       );
-
-     const a = await deleteFile('public/'+ sponser.photo  )
       res.status(200).json({ message: "Sponsor updated successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });

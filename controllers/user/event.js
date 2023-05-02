@@ -6,7 +6,6 @@ module.exports = {
   getAllEvent: async (req, res) => {
     try {
       const { body } = req;
-      console.log(body);
       const dateToFind = new Date(body.date);
       const startOfDay = new Date(dateToFind.setHours(0, 0, 0, 0)); // start of day
       const endOfDay = new Date(dateToFind.setHours(23, 59, 59, 999));
@@ -30,4 +29,22 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  getEventsDate : async (req,res)=>{
+    try {
+      console.log('dddd');
+      const scheduleCountsByDate = await SchScheam.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$startDateTime' } },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+      res.json( scheduleCountsByDate );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching schedule counts' });
+    }
+  }
 };

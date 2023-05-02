@@ -1,5 +1,6 @@
 const Schedule = require("../../models/Schedule");
 const Event = require("../../models/Event");
+const moment = require("moment");
 
 module.exports = {
   createSchedule: async (req, res) => {
@@ -11,11 +12,17 @@ module.exports = {
       if (!result) {
         return res.status(400).json({ message: "Please provide a valid id" });
       }
+
+      
+
+
       const startDateTime = new Date(body.startDateTime);
       const endDateTime = new Date(body.endDateTime);
       const durationMs = endDateTime - startDateTime;
       const hours = Math.floor(durationMs / 3600000);
       const minutes = Math.round((durationMs % 3600000) / 60000);
+
+     
 
       const newSchedule = await new Schedule({
         startDateTime,
@@ -49,6 +56,8 @@ module.exports = {
       const { id } = req.params;
       const { body } = req;
       console.log(body, "body");
+
+      
       const updatedSchedule = await Schedule.findByIdAndUpdate(id, {
         $set: body,
       });
@@ -61,10 +70,14 @@ module.exports = {
   },
 
   chageStatus: async (req, res) => {
+
     try {
       const { id } = req.params;
-
+      console.log(id);
+      
       const { status } = req.body;
+      console.log(status);
+
       const updatedSchedule = await Schedule.findByIdAndUpdate(
         id,
         {
