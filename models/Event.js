@@ -7,22 +7,19 @@ const eventSchema = mongoose.Schema(
       type: Date,
       required: [true, "date is required"],
     },
-    
     endDateTime: {
       type: Date,
       required: [true, "End time is Required"],
     },
-
     status: {
       type: String,
-      enum: ["Completed", "Active", "Inactive", "Started", "Deleted", "Cancelled"],
-      default: "Active",
+      enum: ["Completed", "Ongoing", "Cancelled", "Pending"],
+      default: "Pending",
     },
-    title: { type: String, required: [true, "date is required"] },
-    duration: { type: String, required: [true, "date is required"] },
-    speakers: { type: Array, required: [true, "date is required"] },
-    moderator: { type: Array, required: [true, "date is required"] },
-    discription: { type: Array, required: [true, "date is required"] },
+    eventTitle: { type: String, required: [true, "title is required"] },
+    venue: { type: String, required: [true, "event is required"] },
+    discription: String,
+    event_schedule: [{ type: ObjectId, ref: "Schedule" }],
   },
   {
     timestamps: true,

@@ -7,7 +7,7 @@ const Gallery = require('../controllers/user/gallery')
 
 
 /* GET Event listing. */
-router.get('/event',Event.getAllEvent)
+router.post('/event',Event.getAllEvent)
 router.get('/event/:id', Event.getEventById)
 
 /* GET Spekers listing. */
