@@ -51,10 +51,6 @@ module.exports = {
       const { id } = req.params;
       const { event_schedule } = await EventSchema.findById(id);
       const events = await EventSchema.findByIdAndDelete(id);
-      // event_schedule.forEach(async (event) => {
-      //     await SchduleSchema.findByIdAndDelete(event);
-      // })
-
       const result = await SchduleSchema.deleteMany({
         _id: { $in: event_schedule },
       });

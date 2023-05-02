@@ -4,6 +4,7 @@ const Event = require('../controllers/user/event')
 const Speker = require('../controllers/user/spekers')
 const Sponser = require('../controllers/user/sponsers')
 const Gallery = require('../controllers/user/gallery')
+const User = require('../controllers/user/User')
 
 
 /* GET Event listing. */
@@ -23,5 +24,7 @@ router.get('/images',Gallery.getImages)
 router.get('/videos',Gallery.getVideos)
 
 /* GET User listing. */
+
+router.get('/user/:id',User.getUserById)
 
 module.exports = router;
