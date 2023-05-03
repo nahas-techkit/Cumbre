@@ -16,32 +16,27 @@ module.exports = {
       if (existingUser) {
         return res
           .status(400)
-          .json({ message: "This email address already exists" });
+          .json({ message: "This mobile number is already exists" });
       }
 
-      
-      
-
-
-
       const newUser = await new User({
-        professional:body.professional,
-        first_name:body.first_name,
-        middle_name:body.middle_name,
-        last_name:body.last_name,
-        membership_no:body.membership_no,
+        name:body.name,
         phone_no:body.phone_no,
         email:body.email,
-        personal_bio:body.personal_bio,
         company:body.company,
-        position:body.company,
-        company_bio:body.company_bio,
-        education:body.education,
-        permenent_address:body.permenent_address,
-        city:body.city,
-        state:body.state,
-        country:body.country,
-        postal_code:body.postal_code,
+        // first_name:body.first_name,
+        // middle_name:body.middle_name,
+        // last_name:body.last_name,
+        // membership_no:body.membership_no,
+        // personal_bio:body.personal_bio,
+        // position:body.company,
+        // company_bio:body.company_bio,
+        // education:body.education,
+        // permenent_address:body.permenent_address,
+        // city:body.city,
+        // state:body.state,
+        // country:body.country,
+        // postal_code:body.postal_code,
         photo:"/uploads/profile/" + file?.filename,
       })
 
