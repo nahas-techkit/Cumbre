@@ -72,4 +72,23 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  chageStatus: async (req, res) => {
+
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const updatedSchedule = await EventSchema.findByIdAndUpdate(
+        id,
+        {
+          $set: { status },
+        },
+        { new: true }
+      );
+
+      res.status(200).json({ message: `Status Changed`, updatedSchedule });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 };

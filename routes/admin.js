@@ -34,6 +34,7 @@ router.get("/event", Event.getAllevent);
 router.get("/event/:id", Event.getById);
 router.put("/event/:id", Event.updateEvent);
 router.delete("/event/:id", Event.deleteEvent);
+router.patch("/event-status/:id", Event.chageStatus);
 
 /* Schedule listing. */
 router.post("/schedule/:id", Schedule.createSchedule);
@@ -49,6 +50,7 @@ router.get("/speker", Speker.getAllSpeker);
 router.get("/speker/:id", Speker.getSpekersById);
 router.delete("/speker/:id", Speker.deleteSpeker);
 router.put("/speker/:id",upload.single('photo'), Speker.updateSpeker);
+router.patch("/speker-status/:id", Speker.chageStatus);
 
 
 /* Sponser listing. */

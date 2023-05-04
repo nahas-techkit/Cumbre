@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
+const User = require("../../models/Admin");
 const { generateAccessToken } = require("../../utils/JWT");
 module.exports = async (req, res) => {
   const { refreshToken } = req.body;
+  console.log(refreshToken);
 
   // verify refresh token
   jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err, decoded) => {

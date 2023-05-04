@@ -7,6 +7,8 @@ const mongoose = require("mongoose")
 const cors = require('cors')
 require("dotenv").config()
 
+const {authenticateToken} = require('./utils/JWT')
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
@@ -26,10 +28,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
-app.use('/api/v1/user', usersRouter);
+app.use('/api/v1/user', authenticateToken, usersRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/admin', adminRouter);
+app.use('/api/v1/admin',authenticateToken, adminRouter);
 
 
 // Mongoose Connection
