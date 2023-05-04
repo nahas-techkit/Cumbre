@@ -30,7 +30,7 @@ router.post('/admin-register',AdminAuth.register)
 router.post('/admin-login',AdminAuth.login)
 
 /* GET Admin listing. */
-router.post('regenerate-token',regenerateToken )
+router.post('/regenerate-token',regenerateToken )
 
 
 
