@@ -37,8 +37,12 @@ module.exports = {
         // state:body.state,
         // country:body.country,
         // postal_code:body.postal_code,
-        photo:"/uploads/profile/" + file?.filename,
+       
       })
+
+      if(file) {
+        newUser.photo="/uploads/profile/" + file?.filename
+      }
 
       const accessToken = generateAccessToken({ id: newUser._id });
       const refreshToken = generateRefreshToken({ id: newUser._id });
