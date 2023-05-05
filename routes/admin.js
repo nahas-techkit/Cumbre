@@ -6,6 +6,8 @@ const Schedule = require("../controllers/admin/schedule");
 const Speker = require("../controllers/admin/spekers");
 const Sponser = require("../controllers/admin/sponser");
 const Gallery = require("../controllers/admin/Gallery");
+const Dashboard = require("../controllers/admin/dashBoard");
+const dashBoard = require("../controllers/admin/dashBoard");
 
 // Multer Setup //
 const storage = multer.diskStorage({
@@ -66,7 +68,8 @@ router.get('/image', Gallery.getAllImage )
 router.get('/video', Gallery.getVideos )
 router.delete('/gallery/:id', Gallery.deleteFile )
 
-
+/* Dash Board listing. */
+router.get('/dashboard', dashBoard.getDashBoardDeatils)
 
 
 module.exports = router;

@@ -11,8 +11,15 @@ module.exports = {
         name: body.name,
         bio: body.company_bio,
         email: body.email,
-        photo: "/uploads/sponsers/" + file?.filename,
-      }).save();
+        
+      });
+
+      if(file){
+        newSponser.photo = "/uploads/sponsers/" + file?.filename
+      }
+     
+
+      newSponser.save()
 
       res
         .status(200)

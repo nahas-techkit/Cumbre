@@ -4,6 +4,7 @@ const {
   generateRefreshToken,
 } = require("../../utils/JWT");
 const User = require("../../models/User");
+const {dosms,otpVerify} = require('../../libs/OTP')
 
 
 module.exports = {
@@ -60,20 +61,26 @@ module.exports = {
     }
   },
 
+  
+
   login: async (req, res) => {
     try {
-      const { phone_no} = req.body;
+      const { phone_no, otp} = req.body;
       const user = await User.findOne({ phone_no });
 
       if (!user) {
         return res.status(401).json({ message: "Phone No does not exist", userExist:false });
       }
 
+      const verify = await otpVerify(otp, phone_no);
+      if (!verify) {
+        return res.status(400).json({ message: "invalid otp number" });
+      }
+
       const accessToken = generateAccessToken({ id: user._id });
       const refreshToken = generateRefreshToken({ id: user._id });
 
       res.status(200).json({
-        userExist:true,
         user,
         accessToken,
         refreshToken
@@ -82,5 +89,22 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  sendOtpAndCheckUser : async (req,res)=>{
+    try {
+      const {phone_no} = req.body;
+      const user = await User.findOne({ phone_no });
+
+      if (!user) {
+        return res.status(401).json({ message: "Phone No does not exist", userExist:false });
+      }
+
+      const sms = await dosms(phone_no);
+      res.status(200).json({ message: "OTP send to the phone NO", userExist:true });
+
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 
 };

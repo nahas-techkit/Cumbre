@@ -25,11 +25,14 @@ router.post('/login',Register.login)
 router.post('/send-otp',Auth.sendOTP)
 router.post('/verify-otp',Auth.verifyOtp)
 
+// Check User Exists
+router.post('/check-user', Register.sendOtpAndCheckUser)
+
 /* GET Admin listing. */
 router.post('/admin-register',AdminAuth.register)
 router.post('/admin-login',AdminAuth.login)
 
-/* GET Admin listing. */
+/* Regenerate Token. */
 router.post('/regenerate-token',regenerateToken )
 
 

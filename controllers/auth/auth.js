@@ -6,6 +6,9 @@ module.exports = {
   sendOTP: async (req, res) => {
     try {
         const { phone_no } = req.body;
+
+
+        
         console.log(phone_no);
         const sms = await dosms(phone_no);
         res.status(200).json(sms);

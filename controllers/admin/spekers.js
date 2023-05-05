@@ -7,19 +7,24 @@ module.exports = {
       const { body } = req;
       const { file } = req;
       const newSpeker = await new Speker({
-        name: body.name,
-        phone_no: body.phone_no,
-        email: body.email,
-        personal_bio: body.personal_bio,
-        company: body.company,
-        education: body.education,
-        permenent_address: body.permenent_address,
-        city: body.city,
-        state: body.state,
-        country: body.country,
-        postal_code: body.postal_code,
-        photo: "/uploads/spekers/" + file?.filename,
+        name: body?.name,
+        phone_no: body?.phone_no,
+        email: body?.email,
+        personal_bio: body?.personal_bio,
+        company: body?.company,
+        education: body?.education,
+        permenent_address: body?.permenent_address,
+        city: body?.city,
+        state: body?.state,
+        country: body?.country,
+        postal_code: body?.postal_code,
+        
       }).save();
+
+      if(file){
+        newSpeker.photo = "/uploads/spekers/" + file?.filename
+      }
+      newSpeker.save();
       res.status(200).json({ message: "Speker created successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });
