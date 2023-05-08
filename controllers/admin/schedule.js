@@ -5,16 +5,15 @@ const moment = require("moment");
 module.exports = {
   createSchedule: async (req, res) => {
     try {
+      console.log("cs");
       const { body } = req;
       const { id } = req.params;
       const result = await Event.exists({ _id: id });
+      console.log(body,'body');
 
       if (!result) {
         return res.status(400).json({ message: "Please provide a valid id" });
       }
-
-      
-
 
       const startDateTime = new Date(body.startDateTime);
       const endDateTime = new Date(body.endDateTime);
@@ -22,11 +21,24 @@ module.exports = {
       const hours = Math.floor(durationMs / 3600000);
       const minutes = Math.round((durationMs % 3600000) / 60000);
 
-     
+      const options = {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      const dateForSave = startDateTime.toLocaleString("en-IN", options);
+      const endDateForSave = endDateTime.toLocaleString("en-IN", options);
+
+      
 
       const newSchedule = await new Schedule({
         startDateTime,
         endDateTime,
+        startDateTimeShow: dateForSave,
+        endDateTimeShow: endDateForSave,
         duration: `${hours} hours ${minutes} minutes`,
         title: body.title,
         speakers: body.speakers,
@@ -40,8 +52,6 @@ module.exports = {
           event_schedule: newSchedule._id,
         },
       });
-
-      console.log("event=>", event);
 
       res
         .status(200)
@@ -57,9 +67,36 @@ module.exports = {
       const { body } = req;
       console.log(body, "body");
 
-      
+
+      const startDateTime = new Date(body.startDateTime);
+      const endDateTime = new Date(body.endDateTime);
+      const durationMs = endDateTime - startDateTime;
+      const hours = Math.floor(durationMs / 3600000);
+      const minutes = Math.round((durationMs % 3600000) / 60000);
+
+      const options = {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      const dateForSave = startDateTime.toLocaleString("en-IN", options);
+      const endDateForSave = endDateTime.toLocaleString("en-IN", options);
+
+
       const updatedSchedule = await Schedule.findByIdAndUpdate(id, {
-        $set: body,
+        startDateTime,
+        endDateTime,
+        startDateTimeShow: dateForSave,
+        endDateTimeShow: endDateForSave,
+        duration: `${hours} hours ${minutes} minutes`,
+        title: body.title,
+        speakers: body.speakers,
+        moderator: body.moderator,
+        discription: body.discription,
+        event: id,
       });
       res
         .status(200)
@@ -70,11 +107,10 @@ module.exports = {
   },
 
   chageStatus: async (req, res) => {
-
     try {
       const { id } = req.params;
       console.log(id);
-      
+
       const { status } = req.body;
       console.log(status);
 
@@ -113,11 +149,11 @@ module.exports = {
       });
 
       console.log(pullIdFromEvent);
-      
-      const deleted = await Schedule.findByIdAndDelete(id);
-      console.log(deleted, 'deleted');
 
-      res.status(200).json({message:'Schedule deleted successfully'})
+      const deleted = await Schedule.findByIdAndDelete(id);
+      console.log(deleted, "deleted");
+
+      res.status(200).json({ message: "Schedule deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

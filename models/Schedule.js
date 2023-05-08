@@ -8,6 +8,17 @@ const scheduleSchema = mongoose.Schema(
       required: [true, "date is required"],
     },
     
+    startDateTimeShow: {
+      type: String,
+      required: [true, "date is required"],
+    },
+
+    endDateTimeShow: {
+      type: String,
+      required: [true, "date is required"],
+    },
+
+
     endDateTime: {
       type: Date,
       required: [true, "End time is Required"],
