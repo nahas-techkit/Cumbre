@@ -35,6 +35,6 @@ router.post("/conversation", Conversation.create);
 
 /* GET Messages listing*/
 router.get("/message", Messages.get);
-router.post("/message/:id", Messages.create);
+router.post("/message", Messages.create);
 
 module.exports = router;

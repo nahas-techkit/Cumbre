@@ -4,9 +4,10 @@ const Message = require("../../models/Message");
 
 module.exports = {
   get: async (req, res) => {
-    let userId = req.body.userId;
+    let userId = req.query.userId;
     try {
-      const conversations = await Conversation.find({ users: userId })
+      console.log(req.query);
+      const conversations = await Conversation.find({ users: {$in:[userId]} })
         .populate({ path: "users", select: "name email phone_no photo" })
         .populate({
           path: "messages",
@@ -16,10 +17,11 @@ module.exports = {
         })
         .sort({ "messages.createdAt": -1 });
 
+        console.log(conversations);
       const result = conversations.map((conversation) => ({
         conversationId: conversation._id,
-        messageId: conversation.messages[0]._id,
-        senderId: conversation.messages[0].sender._id,
+        messageId: conversation.messages[0]?._id,
+        senderId: conversation.messages[0]?.sender?._id,
         recipientId: conversation.users.filter(
           (user) => !user._id.equals(userId)
         )[0]._id,
@@ -34,6 +36,7 @@ module.exports = {
     }
   },
   create: async (req, res) => {
+    let io=req.get('io');
     let { sender, reciever } = req.body;
     try {
       let isExist = await Conversation.findOne({
@@ -60,11 +63,11 @@ module.exports = {
 
       res.json({
         conversationId: conversation._id,
-        messageId: message._id,
+        messageId: message?._id,
         senderId: sender,
         recipientId: req.body.reciever,
         text: req.body.message,
-        createdAt: message.createdAt,
+        createdAt: message?.createdAt,
       });
     } catch (err) {
       console.error(err);

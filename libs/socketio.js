@@ -31,7 +31,7 @@ const getUser = (userId) => {
  *  @param {import('socket.io').Server} io
  * @param {*} data
  */
-const sendMessage = ( { recieverId, senderId, text } = {}) => {
+io. sendMessage = ( { recieverId, senderId, text } = {}) => {
   console.log(io.users);
   let reciever = getUser(recieverId);
   if (reciever?.socketId) {
@@ -76,4 +76,4 @@ console.log(io.users);
 
 module.exports = io;
 exports.getUser = getUser;
-exports.sendMessage = sendMessage;
+// exports.sendMessage = sendMessage;

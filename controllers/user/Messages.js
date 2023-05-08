@@ -4,16 +4,25 @@ const Message = require("../../models/Message");
 
 module.exports = {
   create: async (req, res) => {
-    let { senderId,  } = req.body;
+    let { sender, reciever, conversationId, text } = req.body;
     try {
-      const conversation = await Conversation.findById(
-        req.params.conversationId
-      );
-      if (!conversation) {
-        return res.status(404).send("Conversation not found");
+      let conversation;
+      if (conversationId) {
+        conversation = await Conversation.findById(conversationId);
+      }
+      if (!conversationId) {
+        conversation = await Conversation.findOne({
+          users: { $all: [sender, reciever] },
+        });
       }
 
-      if (!conversation.users.includes(senderId)) {
+      if (!conversation) {
+        conversation = new Conversation({
+          users: [sender, reciever],
+        });
+      }
+
+      if (!conversation.users.includes(sender)) {
         return res
           .status(403)
           .send("You are not authorized to send messages to this conversation");
@@ -21,8 +30,8 @@ module.exports = {
 
       const message = new Message({
         conversation: conversation._id,
-        sender: senderId,
-        text: req.body.message,
+        sender,
+        text: text,
       });
 
       conversation.messages.push(message._id);
@@ -30,15 +39,15 @@ module.exports = {
       await conversation.save();
       await message.save();
       let recieverId = conversation.users.filter(
-        (user) => !user._id.equals(senderId)
+        (user) => !user._id.equals(sender)
       )[0]._id;
-      sendMessage({ recieverId, senderId, message });
+      sendMessage({ recieverId, senderId: sender, message });
       res.json({
         conversationId: conversation._id,
         messageId: message._id,
-        senderId: senderId,
+        senderId: sender,
         recipientId: recieverId,
-        content: req.body.message,
+        text,
         createdAt: message.createdAt,
       });
     } catch (err) {
@@ -47,20 +56,20 @@ module.exports = {
     }
   },
   get: async (req, res) => {
-    let { conversationId, recieverId } = req.body;
+    let { conversationId, recieverId, senderId } = req.query;
     try {
       const messages = await Message.find({
         conversation: conversationId,
       })
-        .populate("sender", "user")
+        .populate({path:"sender"})
         .select("sender text createdAt")
         .sort({ createdAt: 1 });
 
       const result = messages.map((message) => ({
         messageId: message._id,
-        senderId: message.sender._id,
-        recipientId: recieverId,
-        content: message.content,
+        sender: message.sender._id,
+        // recipientId: recieverId,
+        text: message.text,
         createdAt: message.createdAt,
       }));
 
