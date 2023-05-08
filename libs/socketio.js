@@ -31,12 +31,18 @@ const getUser = (userId) => {
  *  @param {import('socket.io').Server} io
  * @param {*} data
  */
-io.sendMessage = ({ reciever, sender, messageId, text, createdAt } = {}) => {
-  console.log(reciever, sender, text);
-  let reciever = getUser(reciever);
+io.sendMessage = ({
+  reciever: recieverId,
+  sender,
+  messageId,
+  text,
+  createdAt,
+} = {}) => {
+  console.log(recieverId, sender, text);
+  let reciever = getUser(recieverId);
   if (reciever?.socketId) {
     io.to(reciever?.socketId).emit("getMessage", {
-      reciever,
+      reciever: recieverId,
       sender,
       messageId,
       text,
