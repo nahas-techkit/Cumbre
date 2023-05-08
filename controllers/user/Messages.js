@@ -56,12 +56,21 @@ module.exports = {
     }
   },
   get: async (req, res) => {
-    let { conversationId, recieverId, senderId } = req.query;
+    let { conversationId, reciever, sender } = req.query;
     try {
+      let conversation;
+      if (!conversationId) {
+        conversation = await Conversation.findOne({
+          users: { $all: [sender, reciever] },
+        });
+      }
+      if (conversation) {
+        conversationId = conversation._id;
+      }
       const messages = await Message.find({
         conversation: conversationId,
       })
-        .populate({path:"sender"})
+        .populate({ path: "sender" })
         .select("sender text createdAt")
         .sort({ createdAt: 1 });
 
