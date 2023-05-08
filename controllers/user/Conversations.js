@@ -7,7 +7,9 @@ module.exports = {
     let userId = req.query.userId;
     try {
       console.log(req.query);
-      const conversations = await Conversation.find({ users: {$in:[userId]} })
+      const conversations = await Conversation.find({
+        users: { $in: [userId] },
+      })
         .populate({ path: "users", select: "name email phone_no photo" })
         .populate({
           path: "messages",
@@ -17,7 +19,7 @@ module.exports = {
         })
         .sort({ "messages.createdAt": -1 });
 
-        console.log(conversations);
+      console.log(conversations);
       const result = conversations.map((conversation) => ({
         conversationId: conversation._id,
         messageId: conversation.messages[0]?._id,
@@ -36,7 +38,7 @@ module.exports = {
     }
   },
   create: async (req, res) => {
-    let io=req.get('io');
+    let io = req.get("io");
     let { sender, reciever } = req.body;
     try {
       let isExist = await Conversation.findOne({
@@ -56,7 +58,15 @@ module.exports = {
         });
 
         conversation.messages.push(message._id);
-        sendMessage({ reciever, sender, message });
+        sendMessage({
+
+          conversationId: conversation._id,
+          messageId: message?._id,
+          senderId: sender,
+          recipientId: req.body.reciever,
+          text: req.body.message,
+          createdAt: message?.createdAt,
+        });
         await message.save();
       }
       await conversation.save();

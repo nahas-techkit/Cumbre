@@ -41,7 +41,13 @@ module.exports = {
       let recieverId = conversation.users.filter(
         (user) => !user._id.equals(sender)
       )[0]._id;
-      sendMessage({ recieverId, senderId: sender, message });
+      sendMessage({
+        reciever: recieverId.toString(),
+        sender: sender,
+        messageId: message._id,
+        text: message.text,
+        createdAt: message.createdAt,
+      });
       res.json({
         conversationId: conversation._id,
         messageId: message._id,
