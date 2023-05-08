@@ -25,5 +25,6 @@ router.get("/videos", Gallery.getVideos);
 
 /* GET User listing. */
 router.get("/user/:id", User.getUserById);
+router.get("/user", User.getAllUSers);
 
 module.exports = router;
