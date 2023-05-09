@@ -73,22 +73,28 @@ module.exports = {
       if (conversation) {
         conversationId = conversation._id;
       }
-      const messages = await Message.find({
-        conversation: conversationId,
-      })
-        .populate({ path: "sender" })
-        .select("sender text createdAt")
-        .sort({ createdAt: 1 });
+      console.log(conversationId,"hjhjh");
+      if(conversationId){
 
-      const result = messages.map((message) => ({
-        messageId: message._id,
-        sender: message.sender._id,
-        // recipientId: recieverId,
-        text: message.text,
-        createdAt: message.createdAt,
-      }));
-
-      res.json({ result });
+        const messages = await Message.find({
+          conversation: conversationId,
+        })
+          .populate({ path: "sender" })
+          .select("sender text createdAt")
+          .sort({ createdAt: 1 });
+  
+        const result = messages.map((message) => ({
+          messageId: message._id,
+          sender: message.sender._id,
+          // recipientId: recieverId,
+          text: message.text,
+          createdAt: message.createdAt,
+        }));
+  
+        res.json({ result });
+      }else{
+        res.json({result: null,message:"no messsage is found"})
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send("Internal server error");
