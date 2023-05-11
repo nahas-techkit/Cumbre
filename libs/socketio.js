@@ -28,7 +28,6 @@ const getUser = (userId) => {
 
 /**
  *
- *  @param {import('socket.io').Server} io
  * @param {*} data
  */
 io.sendMessage = ({
@@ -40,14 +39,21 @@ io.sendMessage = ({
 } = {}) => {
   console.log(recieverId, sender, text);
   let reciever = getUser(recieverId);
-  if (reciever?.socketId) {
-    io.to(reciever?.socketId).emit("getMessage", {
-      reciever: recieverId,
-      sender,
-      messageId,
-      text,
-      createdAt,
-    });
+  try {
+    if (reciever?.socketId) {
+      io.to(reciever?.socketId).emit("getMessage", {
+        reciever: recieverId,
+        sender,
+        messageId,
+        text,
+        createdAt,
+      });
+      return { success: true };
+    } else {
+      throw new Error("Reciever not found");
+    }
+  } catch (e) {
+    return { success: false, error: e };
   }
 };
 

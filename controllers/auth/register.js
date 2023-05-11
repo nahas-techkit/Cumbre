@@ -1,17 +1,15 @@
-
 const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../../utils/JWT");
 const User = require("../../models/User");
-const {dosms,otpVerify} = require('../../libs/OTP')
-
+const { dosms, otpVerify } = require("../../libs/OTP");
 
 module.exports = {
   register: async (req, res) => {
     try {
-      const {body} = req;
-      const {file} = req;
+      const { body } = req;
+      const { file } = req;
       const existingUser = await User.findOne({ phone_no: body.phone_no });
 
       if (existingUser) {
@@ -20,11 +18,11 @@ module.exports = {
           .json({ message: "This mobile number is already exists" });
       }
 
-      const newUser = await new User({
-        name:body.name,
-        phone_no:body.phone_no,
-        email:body.email,
-        company:body.company,
+      const newUser = new User({
+        name: body.name,
+        phone_no: body.phone_no,
+        email: body.email,
+        company: body.company,
         // first_name:body.first_name,
         // middle_name:body.middle_name,
         // last_name:body.last_name,
@@ -38,11 +36,12 @@ module.exports = {
         // state:body.state,
         // country:body.country,
         // postal_code:body.postal_code,
-       
-      })
-
-      if(file) {
-        newUser.photo="/uploads/profile/" + file?.filename
+      });
+      if (body.deviceToken) {
+        newUser.deviceTokens.push(body.deviceToken);
+      }
+      if (file) {
+        newUser.photo = "/uploads/profile/" + file?.filename;
       }
 
       const accessToken = generateAccessToken({ id: newUser._id });
@@ -61,50 +60,55 @@ module.exports = {
     }
   },
 
-  
-
   login: async (req, res) => {
     try {
-      const { phone_no, otp} = req.body;
+      const { phone_no, otp, deviceToken } = req.body;
       const user = await User.findOne({ phone_no });
 
       if (!user) {
-        return res.status(401).json({ message: "Phone No does not exist", userExist:false });
+        return res
+          .status(401)
+          .json({ message: "Phone No does not exist", userExist: false });
       }
 
       const verify = await otpVerify(otp, phone_no);
       if (!verify) {
         return res.status(400).json({ message: "invalid otp number" });
       }
-
+      if (deviceToken) {
+        user.deviceTokens = [...new Set([...user.deviceTokens, deviceToken])];
+      }
+      await user.save();
       const accessToken = generateAccessToken({ id: user._id });
       const refreshToken = generateRefreshToken({ id: user._id });
 
       res.status(200).json({
         user,
         accessToken,
-        refreshToken
+        refreshToken,
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
 
-  sendOtpAndCheckUser : async (req,res)=>{
+  sendOtpAndCheckUser: async (req, res) => {
     try {
-      const {phone_no} = req.body;
+      const { phone_no } = req.body;
       const user = await User.findOne({ phone_no });
 
       if (!user) {
-        return res.status(401).json({ message: "Phone No does not exist", userExist:false });
+        return res
+          .status(401)
+          .json({ message: "Phone No does not exist", userExist: false });
       }
 
       const sms = await dosms(phone_no);
-      res.status(200).json({ message: "OTP send to the phone NO", userExist:true });
-
+      res
+        .status(200)
+        .json({ message: "OTP send to the phone NO", userExist: true });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
-
+  },
 };
