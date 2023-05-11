@@ -26,9 +26,9 @@ module.exports = {
         senderId: conversation.messages[0]?.sender?._id,
         recipientId: conversation.users.filter(
           (user) => !user._id.equals(userId)
-        )[0]._id,
-        text: conversation.messages[0].text,
-        createdAt: conversation.messages[0].createdAt,
+        )[0],
+        text: conversation.messages[0]?.text,
+        createdAt: conversation.messages[0]?.createdAt,
       }));
 
       res.json({ result });
