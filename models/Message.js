@@ -4,7 +4,6 @@ const messageSchema = new Schema({
   conversation: { type: Schema.Types.ObjectId, ref: "Conversation" },
   sender: { type: Schema.Types.ObjectId, ref: "User" },
   text: String,
-  createdAt: { type: Date, default: Date.now },
-});
+},{timestamps:true});
 
 module.exports = mongoose.model("Message", messageSchema);

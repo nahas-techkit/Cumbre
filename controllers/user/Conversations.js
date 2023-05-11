@@ -17,10 +17,10 @@ module.exports = {
           options: { sort: { createdAt: -1 }, limit: 1 },
           populate: { path: "sender", select: "user" },
         })
-        .sort({ "messages.createdAt": -1 });
+        .sort({ "updatedAt": -1 });
 
-      console.log(conversations);
-      const result = conversations.map((conversation) => ({
+
+        const result = conversations.map((conversation) => ({
         conversationId: conversation._id,
         messageId: conversation.messages[0]?._id,
         senderId: conversation.messages[0]?.sender?._id,
