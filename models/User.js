@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     // professional: {
     //   type: String,
@@ -17,7 +17,6 @@ const userSchema = mongoose.Schema(
     // },
     name: {
       type: String,
-      
     },
 
     // membership_no: {
@@ -46,6 +45,7 @@ const userSchema = mongoose.Schema(
     // country: String,
     // postal_code: String,
     photo: String,
+    deviceTokens: [String],
   },
   {
     timestamps: true,

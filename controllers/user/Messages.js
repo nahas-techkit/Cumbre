@@ -1,6 +1,8 @@
 const { getUser, sendMessage } = require("../../libs/socketio");
 const Conversation = require("../../models/Conversation");
 const Message = require("../../models/Message");
+const sendPushNotification = require("../../libs/sendPushNotification");
+const User = require("../../models/User");
 
 module.exports = {
   create: async (req, res) => {
@@ -31,23 +33,56 @@ module.exports = {
       const message = new Message({
         conversation: conversation._id,
         sender,
-        text: text,
+        text,
       });
 
       conversation.messages.push(message._id);
 
       await conversation.save();
       await message.save();
+
       let recieverId = conversation.users.filter(
         (user) => !user._id.equals(sender)
       )[0]._id;
-      sendMessage({
+      let result = sendMessage({
         reciever: recieverId.toString(),
         sender: sender,
         messageId: message._id,
         text: message.text,
         createdAt: message.createdAt,
       });
+      if (!result.success && result.error) {
+        let reciever = await User.findById(recieverId.toString());
+        let senderData = await User.findById(sender);
+        for (let recipientToken of reciever.deviceTokens) {
+          try {
+            await sendPushNotification({
+              notification: {
+                title: senderData.name,
+                body: text,
+                // imageUrl: senderData.photo,
+              },
+              token: recipientToken,
+              apns: {
+                payload: {
+                  aps: {
+                    sound: "default",
+                  },
+                },
+                headers: {
+                  "apns-priority": "5",
+                },
+              },
+            });
+          } catch (err) {
+            console.log(err);
+            reciever.deviceTokens = reciever.deviceTokens.filter(
+              (token) => token !== recipientToken
+            );
+            await reciever.save();
+          }
+        }
+      }
       res.json({
         conversationId: conversation._id,
         messageId: message._id,
@@ -58,7 +93,9 @@ module.exports = {
       });
     } catch (err) {
       console.error(err);
-      res.status(500).send("Internal server error");
+      res
+        .status(500)
+        .json({ message: "Failed to send message", error: err.message });
     }
   },
   get: async (req, res) => {
@@ -91,7 +128,9 @@ module.exports = {
       res.json({ result });
     } catch (err) {
       console.error(err);
-      res.status(500).send("Internal server error");
+      res
+        .status(500)
+        .json({ message: "Messages not found", error: err.message });
     }
   },
 };
