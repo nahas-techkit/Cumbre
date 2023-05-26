@@ -9,7 +9,7 @@ const client = require("twilio")(
       await client.verify.v2
         .services(serviceSid)
         .verifications.create({
-          to: `+91${mobile}`,
+          to: mobile,
           channel: "sms",
         })
         .then((response) => {
@@ -25,7 +25,7 @@ const client = require("twilio")(
   const otpVerify = (otp, mobile) => {
       return new Promise(async (resolve, reject) => {
           await client.verify.v2.services(serviceSid).verificationChecks.create({
-              to: `+91${mobile}`,
+              to: mobile,
               code: otp
           }).then((verification) => {
               resolve(verification.valid)
