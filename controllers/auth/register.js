@@ -8,7 +8,7 @@ const { dosms, otpVerify } = require("../../libs/OTP");
 module.exports = {
   register: async (req, res) => {
     try {
-      const { body,query } = req;
+      const { body, query } = req;
       const { file } = req;
       const existingUser = await User.findOne({ phone_no: body.phone_no });
 
@@ -37,7 +37,7 @@ module.exports = {
         // country:body.country,
         // postal_code:body.postal_code,
       });
-      if (query.deviceToken) {
+      if (query?.deviceToken) {
         newUser.deviceTokens.push(query.deviceToken);
       }
       if (file) {
