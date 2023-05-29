@@ -43,7 +43,10 @@ module.exports = {
 
       let recieverId = conversation.users.filter(
         (user) => !user._id.equals(sender)
-      )[0]._id;
+      )[0]?._id;
+      if(!recieverId){
+        res.status(404).json({message: "Reciever not found"})
+      }
       let result = sendMessage({
         reciever: recieverId.toString(),
         sender: sender,
@@ -54,6 +57,8 @@ module.exports = {
       if (!result.success && result.error) {
         let reciever = await User.findById(recieverId.toString());
         let senderData = await User.findById(sender);
+        if(!reciever || !reciever.deviceTokens){
+
         for (let recipientToken of reciever.deviceTokens) {
           try {
             await sendPushNotification({
@@ -82,6 +87,8 @@ module.exports = {
             await reciever.save();
           }
         }
+      }
+
       }
       res.json({
         conversationId: conversation._id,

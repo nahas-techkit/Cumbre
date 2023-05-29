@@ -17,19 +17,20 @@ module.exports = {
           options: { sort: { createdAt: -1 }, limit: 1 },
           populate: { path: "sender", select: "user" },
         })
-        .sort({ "updatedAt": -1 });
+        .sort({ updatedAt: -1 });
 
-
-        const result = conversations.map((conversation) => ({
-        conversationId: conversation._id,
-        messageId: conversation.messages[0]?._id,
-        senderId: conversation.messages[0]?.sender?._id,
-        recipientId: conversation.users.filter(
-          (user) => !user._id.equals(userId)
-        )[0],
-        text: conversation.messages[0]?.text,
-        createdAt: conversation.messages[0]?.createdAt,
-      }));
+      const result = conversations
+        .filter((conversation) => !conversation.messages[0]?.sender?._id)
+        .map((conversation) => ({
+          conversationId: conversation._id,
+          messageId: conversation.messages[0]?._id,
+          senderId: conversation.messages[0]?.sender?._id,
+          recipientId: conversation.users.filter(
+            (user) => !user._id.equals(userId)
+          )[0],
+          text: conversation.messages[0]?.text,
+          createdAt: conversation.messages[0]?.createdAt,
+        }));
 
       res.json({ result });
     } catch (err) {
@@ -59,7 +60,6 @@ module.exports = {
 
         conversation.messages.push(message._id);
         sendMessage({
-
           conversationId: conversation._id,
           messageId: message?._id,
           senderId: sender,
