@@ -20,7 +20,7 @@ module.exports = {
         .sort({ updatedAt: -1 });
 
       const result = conversations
-        .filter((conversation) => !conversation.messages[0]?.sender?._id)
+        .filter((conversation) => conversation.messages[0]?.sender?._id)
         .map((conversation) => ({
           conversationId: conversation._id,
           messageId: conversation.messages[0]?._id,
@@ -30,11 +30,12 @@ module.exports = {
           )[0],
           text: conversation.messages[0]?.text,
           createdAt: conversation.messages[0]?.createdAt,
-        }));
-
+        })).filter((conversation) => conversation.recipientId)
+        ;
+console.log(result);
       res.json({ result });
     } catch (err) {
-      console.error(err);
+      console.log(err);
       res.status(500).json("Internal server error");
     }
   },
