@@ -6,21 +6,26 @@ module.exports = {
   get: async (req, res) => {
     let userId = req.query.userId;
     try {
+      let search = req.query.search
+      let match = {}
+      if (search) {
+        match.$or = [{ name: { $regex: search ,'$options' : 'i'} }, { phone_no: { $regex: search,'$options' : 'i' } }]
+      }
       console.log(req.query);
       const conversations = await Conversation.find({
         users: { $in: [userId] },
       })
-        .populate({ path: "users", select: "name email phone_no photo" })
+        .populate({ path: "users", select: "name email phone_no photo" ,match})
         .populate({
           path: "messages",
           select: "sender text createdAt",
-          options: { sort: { createdAt: -1 }, limit: 1 },
+          options: { sort: { createdAt: -1 }, },
           populate: { path: "sender", select: "user" },
         })
         .sort({ updatedAt: -1 });
 
       const result = conversations
-        .filter((conversation) => conversation.messages[0]?.sender?._id)
+        // .filter((conversation) => conversation.messages[0]?.sender?._id)
         .map((conversation) => ({
           conversationId: conversation._id,
           messageId: conversation.messages[0]?._id,
@@ -32,7 +37,7 @@ module.exports = {
           createdAt: conversation.messages[0]?.createdAt,
         })).filter((conversation) => conversation.recipientId)
         ;
-console.log(result);
+// console.log(result);
       res.json({ result });
     } catch (err) {
       console.log(err);

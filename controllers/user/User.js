@@ -15,7 +15,12 @@ module.exports = {
 
   getAllUSers: async (req, res) => {
     try {
-      const users = await User.find().sort({ name: 1 });
+      let search = req.query.search
+      let match = {}
+      if (search) {
+        match.$or = [{ name: { $regex: search ,'$options' : 'i'} }, { phone_no: { $regex: search,'$options' : 'i' } }]
+      }
+      const users = await User.find(match).sort({ name: 1 });
       res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ message: error.message });
